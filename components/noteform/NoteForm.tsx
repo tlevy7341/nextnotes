@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTheme } from "next-themes";
 import { useRef, useState } from "react";
+import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import useOnClickOutside from "use-onclickoutside";
 import customAxios from "../../utils/axios";
@@ -11,6 +13,7 @@ const NoteForm = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     const formRef = useRef(null);
     const queryClient = useQueryClient();
+    const { theme } = useTheme();
 
     const initialNoteErrorState = {
         titleError: "",
@@ -48,11 +51,11 @@ const NoteForm = () => {
         }
         setNoteError({ ...initialNoteErrorState });
 
-        mutate({ title: title!, content: content! });
+        addMutation.mutate({ title: title!, content: content! });
         setIsExpanded(false);
     };
 
-    const { mutate } = useMutation(addNote, {
+    const addMutation = useMutation(addNote, {
         onError: (error: string) => {
             toast.error(error);
         },
@@ -64,6 +67,16 @@ const NoteForm = () => {
             queryClient.invalidateQueries(["notes"]);
         }
     });
+
+    if (addMutation.isLoading) {
+        return (
+            <div className="flex items-center w-screen">
+                <ClipLoader
+                    color={`${theme === "dark" ? "#d0d0d0" : "#00000"}`}
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col items-center justify-center pt-10">

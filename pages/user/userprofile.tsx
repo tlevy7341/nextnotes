@@ -4,8 +4,8 @@ import { unstable_getServerSession } from "next-auth/next";
 import { signOut } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import NProgress from "nprogress";
 import { FaLongArrowAltLeft } from "react-icons/fa";
-import { BarLoader } from "react-spinners";
 import DeleteAccountButton from "../../components/userprofile/DeleteAccountButton";
 import ThemeSwitcher from "../../components/userprofile/ThemeSwitcher";
 import UserAvatar from "../../components/userprofile/UserAvatar";
@@ -21,17 +21,12 @@ const UserProfile: NextPage<IdProps> = ({ id }) => {
         {
             onError: () => {
                 signOut({ redirect: true, callbackUrl: "/signin" });
-            }
+            },
+            onSettled: () => NProgress.done()
         }
     );
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center w-screen h-screen">
-                <BarLoader />
-            </div>
-        );
-    }
+    if (isLoading) NProgress.start();
 
     return (
         <>

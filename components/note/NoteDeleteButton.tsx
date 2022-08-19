@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTheme } from "next-themes";
+import NProgress from "nprogress";
 import { FaTrash } from "react-icons/fa";
-import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import { NoteType } from "../../shared/sharedtypes";
 import customAxios from "../../utils/axios";
@@ -9,7 +8,6 @@ import { DeleteNoteType, NoteDeleteButtonProps } from "./notetypes";
 
 const NoteDeleteButton = ({ note, isSelected }: NoteDeleteButtonProps) => {
     const queryClient = useQueryClient();
-    const { theme } = useTheme();
     const deleteNote = async ({ id }: DeleteNoteType) => {
         return customAxios.delete("/notes/deletenote", {
             data: { id }
@@ -18,6 +16,7 @@ const NoteDeleteButton = ({ note, isSelected }: NoteDeleteButtonProps) => {
 
     const deleteMutation = useMutation(deleteNote, {
         onMutate: (deletedNoteId) => {
+            NProgress.start();
             queryClient.setQueryData(["notes"], (prevNotes: any) => {
                 return prevNotes.filter(
                     (note: NoteType) => note.id !== deletedNoteId.id
@@ -28,19 +27,10 @@ const NoteDeleteButton = ({ note, isSelected }: NoteDeleteButtonProps) => {
             toast.error(error);
         },
         onSettled: () => {
+            NProgress.done();
             queryClient.invalidateQueries(["notes"]);
         }
     });
-
-    if (deleteMutation.isLoading) {
-        return (
-            <div className="flex items-center w-screen">
-                <BeatLoader
-                    color={`${theme === "dark" ? "#d0d0d0" : "#00000"}`}
-                />
-            </div>
-        );
-    }
 
     return (
         <button

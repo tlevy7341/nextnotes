@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTheme } from "next-themes";
+import NProgress from "nprogress";
 import { FaSave } from "react-icons/fa";
-import { BeatLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import customAxios from "../../utils/axios";
 import NoteDeleteButton from "./NoteDeleteButton";
@@ -16,7 +15,6 @@ const NoteEditingIcons = ({
     noteContentRef
 }: NoteEditingProps) => {
     const queryClient = useQueryClient();
-    const { theme } = useTheme();
 
     const submitNote = () => {
         const newTitle = noteTitleRef?.current?.innerText;
@@ -37,7 +35,7 @@ const NoteEditingIcons = ({
 
         if (newTitle === note.title && newContent === note.content) return;
 
-        updateMutation.mutate({
+        mutate({
             note: {
                 id: note.id,
                 title: newTitle!,
@@ -52,8 +50,9 @@ const NoteEditingIcons = ({
         });
     };
 
-    const updateMutation = useMutation(updateNote, {
+    const { mutate } = useMutation(updateNote, {
         onMutate: ({ note: updatedNote }) => {
+            NProgress.start();
             noteContentRef.current!.innerText = updatedNote.content;
             noteTitleRef.current!.innerText = updatedNote.title;
         },
@@ -61,20 +60,11 @@ const NoteEditingIcons = ({
             toast.error(error);
         },
         onSettled: () => {
+            NProgress.done();
             setIsSelected(false);
             queryClient.invalidateQueries(["notes"]);
         }
     });
-
-    if (updateMutation.isLoading) {
-        return (
-            <div className="flex items-center w-screen">
-                <BeatLoader
-                    color={`${theme === "dark" ? "#d0d0d0" : "#00000"}`}
-                />
-            </div>
-        );
-    }
 
     return (
         <div

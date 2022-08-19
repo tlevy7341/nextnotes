@@ -5,7 +5,7 @@ import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { signOut } from "next-auth/react";
 import Head from "next/head";
-import { BeatLoader } from "react-spinners";
+import NProgress from "nprogress";
 import MenuButton from "../components/menubutton/MenuButton";
 import Note from "../components/note/Note";
 import NoteForm from "../components/noteform/NoteForm";
@@ -36,17 +36,12 @@ const Home: NextPage<IdProps> = ({ id }) => {
         {
             onError: () => {
                 signOut({ redirect: true, callbackUrl: "/signin" });
-            }
+            },
+            onSettled: () => NProgress.done()
         }
     );
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center w-screen h-screen">
-                <BeatLoader />
-            </div>
-        );
-    }
+    if (isLoading) NProgress.start();
 
     return (
         <div>

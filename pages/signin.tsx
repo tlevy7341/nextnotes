@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { signInFormSchema, signInFormSchemaType } from "../types/authschemas";
+import { signInFormSchema, signInFormSchemaType } from "../shared/authschemas";
 import { authOptions } from "./api/auth/[...nextauth]";
 
 const SignInPage = () => {
@@ -43,7 +43,7 @@ const SignInPage = () => {
             </Head>
             <main className="flex flex-col justify-around min-h-screen min-w-screen">
                 <h1 className="font-black text-center sm:text-6xl">
-                    Project Name
+                    Next Notes
                 </h1>
                 <div className="px-4 pt-10 border rounded shadow-full sm:max-w-xl sm:mx-auto sm:p-20 sm:pb-0">
                     <div>

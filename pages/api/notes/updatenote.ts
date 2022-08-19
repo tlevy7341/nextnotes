@@ -1,30 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import prisma from "../../../db/db";
-import { changeAvatarSchema } from "../../../shared/authschemas";
 import { authOptions } from "../auth/[...nextauth]";
+import { updateNoteSchema } from "./noteszodschema";
 
-export default async function handleAvatarChange(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
+const updateNote = async (req: NextApiRequest, res: NextApiResponse) => {
     const session = await unstable_getServerSession(req, res, authOptions);
-
     if (!session) {
         return res.status(401).end();
     }
-    if (req.method === "PATCH") {
+    if (req.method === "PUT") {
         try {
-            const { avatar, id } = changeAvatarSchema.parse(req.body);
+            const { id, title, content } = updateNoteSchema.parse(
+                req.body.data
+            );
 
-            await prisma.user.update({
+            const updatedNote = await prisma.notes.update({
                 where: { id },
-                data: { avatar }
+                data: { title, content }
             });
-
-            res.status(200).json(avatar);
+            res.status(200).json(updatedNote);
         } catch (error) {
             res.status(400).json(error);
         }
     }
-}
+};
+
+export default updateNote;

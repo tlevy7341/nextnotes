@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import prisma from "../../../db/db";
-import { deleteSchema } from "../../../types/authschemas";
+import { deleteSchema } from "../../../shared/authschemas";
 import { authOptions } from "../auth/[...nextauth]";
 
 export default async function deleteAccount(

@@ -1,29 +1,71 @@
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query";
+import { AnimatePresence } from "framer-motion";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { signOut } from "next-auth/react";
 import Head from "next/head";
-import { AppUser, IdProps } from "../types/types";
+import { BeatLoader } from "react-spinners";
+import MenuButton from "../components/menubutton/MenuButton";
+import Note from "../components/note/Note";
+import NoteForm from "../components/noteform/NoteForm";
+import { AppUserType, IdProps, NoteType } from "../shared/sharedtypes";
+import customAxios from "../utils/axios";
 import { getUser } from "../utils/helperfunctions";
 import { authOptions } from "./api/auth/[...nextauth]";
 
+const getNotes = async () => {
+    const response = await customAxios.get("/notes/getnotes");
+    return response.data;
+};
+
 const Home: NextPage<IdProps> = ({ id }) => {
-    useQuery<AppUser, Error>(["user"], () => getUser(id), {
-        onError: () => {
-            signOut({ redirect: true, callbackUrl: "/signin" });
+    const { data: user } = useQuery<AppUserType, Error>(
+        ["user"],
+        () => getUser(id),
+        {
+            onError: () => {
+                signOut({ redirect: true, callbackUrl: "/signin" });
+            }
         }
-    });
+    );
+
+    const { data, isLoading } = useQuery<NoteType[], Error>(
+        ["notes"],
+        getNotes,
+        {
+            onError: () => {
+                signOut({ redirect: true, callbackUrl: "/signin" });
+            }
+        }
+    );
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center w-screen h-screen">
+                <BeatLoader />
+            </div>
+        );
+    }
 
     return (
         <div>
             <Head>
-                {/* TODO Change title */}
-                <title>Main Page</title>
+                <title>Next Notes</title>
             </Head>
 
-            <main className="flex items-center justify-center w-screen h-screen">
-                <h1>Hello Next.js</h1>
+            <main className="flex flex-col w-screen h-screen">
+                <MenuButton user={user!} />
+                <NoteForm />
+
+                <div className="container grid grid-cols-1 mx-auto mt-10 auto-rows-auto sm:grid-cols-3 lg:grid-cols-6">
+                    <AnimatePresence>
+                        {data &&
+                            data.map((note) => {
+                                return <Note key={note.id} note={note} />;
+                            })}
+                    </AnimatePresence>
+                </div>
             </main>
         </div>
     );
@@ -50,6 +92,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery(["user"], () => getUser(session.user.id));
+    await queryClient.prefetchQuery(["notes"], getNotes);
 
     return {
         props: {

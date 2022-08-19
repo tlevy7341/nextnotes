@@ -10,25 +10,27 @@ module.exports = {
         themes: [
             {
                 light: {
-                    ...require("daisyui/src/colors/themes")[
-                        "[data-theme=light]"
-                    ],
-                    primary: "#a991f7",
-                    secondary: "#f6d860",
-                    accent: "#2195ed",
-                    neutral: "#202331",
-                    "base-100": "#ffffff",
-                    "accent-content": "#ffffff"
+                    primary: "#e667f7",
+                    secondary: "#fff3b7",
+                    accent: "#4da7af",
+                    neutral: "#241C31",
+                    "base-100": "#F9FAFB",
+                    info: "#59C7F3",
+                    success: "#116956",
+                    warning: "#DB9D0A",
+                    error: "#F03359"
                 },
                 dark: {
-                    ...require("daisyui/src/colors/themes")[
-                        "[data-theme=dark]"
-                    ],
-                    primary: "#98f9eb",
-                    secondary: "#3994bf",
-                    accent: "#0d7377",
-                    neutral: "#3d4451",
-                    "base-100": "#161A1D"
+                    primary: "#e05e64",
+                    secondary: "#f9fc5f",
+                    accent: "#0f766e",
+                    neutral: "#22263A",
+                    "base-100": "#1e293b",
+                    "base-content": "#d0d0d0",
+                    info: "#A7C2E2",
+                    success: "#1DB966",
+                    warning: "#C7770F",
+                    error: "#E83052"
                 }
             }
         ]

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { signUpFormSchema, signUpFormSchemaType } from "../types/authschemas";
+import { signUpFormSchema, signUpFormSchemaType } from "../shared/authschemas";
 import customAxios from "../utils/axios";
 import { authOptions } from "./api/auth/[...nextauth]";
 
@@ -42,7 +42,7 @@ const SignUpPage = () => {
             </Head>
             <main className="flex flex-col justify-around min-h-screen min-w-screen">
                 <h1 className="font-black text-center sm:text-6xl">
-                    Project Name
+                    Next Notes
                 </h1>
 
                 <section className="px-4 pt-10 border rounded shadow-full sm:max-w-xl sm:mx-auto sm:p-20 sm:pb-0">

@@ -3,10 +3,10 @@ import * as style from "@dicebear/avatars-identicon-sprites";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { AppUser } from "../types/types";
-import customAxios from "../utils/axios";
+import { AppUserType } from "../../shared/sharedtypes";
+import customAxios from "../../utils/axios";
 
-const UserAvatar = ({ user }: AppUser) => {
+const UserAvatar = ({ user }: AppUserType) => {
     const queryClient = useQueryClient();
 
     const changeAvatar = async () => {
@@ -15,7 +15,7 @@ const UserAvatar = ({ user }: AppUser) => {
             size: 128
         });
 
-        return await customAxios.patch<AppUser>("/user/changeavatar", {
+        return await customAxios.patch<AppUserType>("/user/changeavatar", {
             avatar,
             id: user.id
         });
@@ -44,7 +44,7 @@ const UserAvatar = ({ user }: AppUser) => {
             <button
                 id="changeAvatarButton"
                 onClick={() => avatarMutation.mutate()}
-                className="mt-3 btn btn-block">
+                className="mt-3 btn btn-accent btn-block">
                 Change Avatar
             </button>
         </section>

@@ -4,7 +4,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import bcrypt from "bcrypt";
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../db/db";
-import { signUpFormSchema } from "../../../types/authschemas";
+import { signUpFormSchema } from "../../../shared/authschemas";
 
 export default async function signUpUser(
     req: NextApiRequest,

@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { AppUser, IdProps } from "../types/types";
-import customAxios from "../utils/axios";
+import { AppUserType, IdProps } from "../../shared/sharedtypes";
+import customAxios from "../../utils/axios";
 
 const DeleteAccountButton = ({ id }: IdProps) => {
     const queryClient = useQueryClient();
     const router = useRouter();
 
     const deleteAccount = async () => {
-        return await customAxios.delete<AppUser>("/user/deleteaccount", {
+        return await customAxios.delete<AppUserType>("/user/deleteaccount", {
             data: { id }
         });
     };

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "https://nextnotes.vercel.app/api";
 
 const customAxios = axios.create({
     baseURL: BASE_URL,
